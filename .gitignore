@@ -1,11 +1,16 @@
-.gradle
-.idea
-.kotlin
-gradle
-build
+*
 
-build.gradle.kts
-gradle.properties
-gradlew
-gradlew.bat
-settings.gradle.kts
+!src
+!src/main
+!src/main/kotlin
+!src/main/kotlin/com
+!src/main/kotlin/com/ahlyia
+!src/main/kotlin/com/ahlyia/chaotic_claims/
+
+!src/main/resources/
+!src/main/resources/plugin.yml
+
+!build.gradle.kts
+!gradlew
+!gradlew.bat
+!gradle
