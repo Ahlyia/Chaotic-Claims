@@ -2,6 +2,7 @@
 .idea
 .kotlin
 gradle
+build
 
 build.gradle.kts
 gradle.properties
