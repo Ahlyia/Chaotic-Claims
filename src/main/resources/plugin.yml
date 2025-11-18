@@ -1,0 +1,4 @@
+name: Chaotic_Claims
+version: '1.0-SNAPSHOT'
+main: com.ahlyia.chaotic_claims.ChaoticClaims
+api-version: '1.21'

@@ -1,0 +1,10 @@
+.gradle
+.idea
+.kotlin
+gradle
+
+build.gradle.kts
+gradle.properties
+gradlew
+gradlew.bat
+settings.gradle.kts
