@@ -23,9 +23,19 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.util.Dictionary
+import com.ahlyia.chaotic_claims.PluginCommands
+import io.papermc.paper.dialog.Dialog
+import io.papermc.paper.registry.data.dialog.DialogBase
+import io.papermc.paper.registry.data.dialog.body.DialogBody
+import io.papermc.paper.registry.data.dialog.type.DialogType
+import net.kyori.adventure.text.Component
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerJoinEvent
 
 @Serializable
 data class PluginSettings(
+    val disableEditWarning: Boolean = false,
     val discordWebhook: String = "",
     val landCostPerBlock: Int = 12,
     val freeClaim: Int = 768, // four chunks
@@ -98,36 +108,36 @@ object DiscordWebhookClient {
     }
 }
 
+public class PluginListener(var settings: PluginSettings) : Listener {
+    @EventHandler
+    fun playerJoined(event: PlayerJoinEvent){
+        val player = event.player
+
+        if(!settings.disableEditWarning) {
+            val warning = Dialog.create{ builder ->
+                builder.empty()
+                    .base(DialogBase.builder(Component.text("WARNING!"))
+                        .body(
+                            listOf<DialogBody>(
+                                DialogBody.plainMessage(Component.text("This warning was issued because `disableEditWarning` is turned OFF in the plugin settings!! Please tell your server owner to check out the Chaotic_Claims settings!"))
+                            )
+                        )
+                        .build())
+                    .type(DialogType.notice())
+            }
+
+            player.showDialog(warning)
+        }
+    }
+}
+
 class ChaoticClaims : JavaPlugin() {
 
     lateinit var settings: PluginSettings
     private val settingsFile by lazy { File(dataFolder,"settings.json") }
 
-    private fun rootCommand(ctx: CommandContext<CommandSourceStack>): Int {
-        val source = ctx.source
-        val sender = source.sender as? Player
-
-        if(sender != null) {
-            println("${sender.name} sent root command!")
-        } else {
-            println("Server, or CommandBlock sent root command!")
-        }
-        return 1
-    }
-    private fun hooktestCommand(ctx: CommandContext<CommandSourceStack>): Int {
-        val source = ctx.source
-        val player = source?.executor as? Player
-
-        if(settings.discordWebhook != "") {
-            DiscordWebhookClient.sendWebhook(settings.discordWebhook,"Hook test! Yargh!\nSent by `${player?.name ?: "SERVER"}`")
-            return 1
-        } else {
-            println("No webhook set!")
-
-            player?.sendMessage("No webhook is currently set for this server!")
-            return 0
-        }
-    }
+    val pluginCommands = PluginCommands(this)
+    val pluginGUIs = PluginGUIs(this)
 
     override fun onEnable() {
         if(!dataFolder.exists()) dataFolder.mkdir()
@@ -135,12 +145,18 @@ class ChaoticClaims : JavaPlugin() {
         settings = JsonSettingsManager.loadSettings(settingsFile)
         println("Discord Webhook ist: ${settings.discordWebhook}")
 
+        server.pluginManager.registerEvents(PluginListener(settings), this)
+        server.pluginManager.registerEvents(GUIListener(settings), this)
+
         this.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {commands ->
             val hooktest = Commands.literal("hooktest")
+                .executes{ctx -> pluginCommands.hooktestCommand(ctx)}
+
             val commandRoot = Commands.literal("chaotic")
 
-            commandRoot.then(hooktest).executes{ctx -> hooktestCommand(ctx) }
-            commandRoot.executes{ctx -> rootCommand(ctx)}
+            commandRoot
+                .then(hooktest)
+                .executes{ctx -> pluginCommands.rootCommand(ctx)}
 
             val commandRootBuild = commandRoot.build()
 
