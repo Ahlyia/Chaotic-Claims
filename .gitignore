@@ -8,6 +8,7 @@
 !src/main/kotlin/com/ahlyia/chaotic_claims/
 
 !src/main/kotlin/com/ahlyia/chaotic_claims/*
+!src/main/kotlin/com/ahlyia/chaotic_claims/custom_commands/*
 
 !src/main/resources/
 !src/main/resources/plugin.yml

@@ -1,32 +1,16 @@
 package com.ahlyia.chaotic_claims
 
+import com.ahlyia.chaotic_claims.custom_commands.RootCommand
 import com.mojang.brigadier.context.CommandContext
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import org.bukkit.entity.Player
-import com.ahlyia.chaotic_claims.ChaoticClaims
-import net.kyori.adventure.text.Component
-import org.bukkit.Bukkit
-import org.bukkit.inventory.Inventory
-
 
 class PluginCommands(private val plugin: ChaoticClaims){
 
-    fun rootCommand(ctx: CommandContext<CommandSourceStack>): Int {
-        val source = ctx.source
-        val player = source.executor as? Player
+    val pluginGUIs = plugin.pluginGUIs
 
-        if(player != null) {
-            println("${player.name} sent root command!")
+    fun rootCommand(ctx: CommandContext<CommandSourceStack>) = RootCommand.execute(ctx,plugin) // an example of my beautiful compartmentalization
 
-            val inventory: Inventory = Bukkit.createInventory(player, 9 * 7, Component.text("Chaotic Claims"))
-
-
-
-        } else {
-            println("Server, or CommandBlock sent root command!")
-        }
-        return 1
-    }
     fun hooktestCommand(ctx: CommandContext<CommandSourceStack>): Int {
         val source = ctx.source
         val player = source?.executor as? Player

@@ -146,7 +146,7 @@ class ChaoticClaims : JavaPlugin() {
         println("Discord Webhook ist: ${settings.discordWebhook}")
 
         server.pluginManager.registerEvents(PluginListener(settings), this)
-        server.pluginManager.registerEvents(GUIListener(settings), this)
+        server.pluginManager.registerEvents(GUIListener(settings, this), this)
 
         this.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {commands ->
             val hooktest = Commands.literal("hooktest")
