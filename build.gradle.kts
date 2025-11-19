@@ -13,6 +13,7 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/") {
         name = "papermc-repo"
     }
+    maven("https://repo.xenondevs.xyz/releases")
 }
 
 dependencies {
@@ -25,6 +26,9 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.4")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
+    implementation("xyz.xenondevs.invui:invui:1.47")
+    implementation("xyz.xenondevs.invui:invui-kotlin:1.47")
 }
 
 tasks {

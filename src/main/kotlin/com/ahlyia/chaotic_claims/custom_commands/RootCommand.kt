@@ -1,7 +1,7 @@
 package com.ahlyia.chaotic_claims.custom_commands
 
 import com.ahlyia.chaotic_claims.ChaoticClaims
-import com.ahlyia.chaotic_claims.PluginGUIs
+import com.ahlyia.chaotic_claims.gui_items.CurrencyDisplayItem
 import com.mojang.brigadier.context.CommandContext
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import net.kyori.adventure.text.Component
@@ -11,6 +11,8 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import xyz.xenondevs.invui.gui.Gui
+import xyz.xenondevs.invui.window.Window
 
 object RootCommand {
     fun execute(ctx: CommandContext<CommandSourceStack>, plugin: ChaoticClaims): Int {
@@ -20,20 +22,28 @@ object RootCommand {
         if(player != null) {
             println("${player.name} sent root command!")
 
-            plugin.pluginGUIs.reset()
 
-            val inventory: Inventory = Bukkit.createInventory(player, 9 * 5, Component.text("Chaotic Claims"))
+            val guiBuilder = Gui.normal()
+                .setStructure(
+                    "---------",
+                    "-.....S#-",
+                    "-.......-",
+                    "-.......-",
+                    "-.......-",
+                    "-.......-",
+                    "---------"
+                )
+                .addIngredient('#', CurrencyDisplayItem(plugin,Material.GRASS_BLOCK,"Claims",player))
+                .addIngredient('S', CurrencyDisplayItem(plugin,Material.SKELETON_SKULL,"Points",player))
+                .build()
 
-            val pageTestStack: ItemStack = ItemStack(Material.GOLD_NUGGET,1)
+            val window = Window.single()
+                .setViewer(player)
+                .setTitle("Chaotic Claims: Home")
+                .setGui(guiBuilder)
+                .build()
 
-            plugin.pluginGUIs.registerButton(pageTestStack) { event ->
-                player.sendMessage("You clicked the button!! Hooray.")
-                1
-            }
-
-            inventory.setItem(8,pageTestStack)
-
-            player.openInventory(inventory)
+            window.open()
         } else {
             println("Server, or CommandBlock sent root command!")
         }
