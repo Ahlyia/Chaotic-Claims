@@ -7,6 +7,8 @@
 !src/main/kotlin/com/ahlyia
 !src/main/kotlin/com/ahlyia/chaotic_claims/
 
+!src/main/kotlin/com/ahlyia/chaotic_claims/*
+
 !src/main/resources/
 !src/main/resources/plugin.yml
 
