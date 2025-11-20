@@ -11,9 +11,10 @@ import org.bukkit.persistence.PersistentDataType
 import xyz.xenondevs.invui.item.ItemProvider
 import xyz.xenondevs.invui.item.builder.ItemBuilder
 import xyz.xenondevs.invui.item.impl.AbstractItem
+import java.text.NumberFormat
 
 
-class CurrencyDisplayItem(val plugin: ChaoticClaims, val itemMaterial: Material, val title: String, val tracking: Player) : AbstractItem() {
+open class CurrencyDisplayItem(val plugin: ChaoticClaims, val itemMaterial: Material, val title: String, val tracking: Player) : AbstractItem() {
 
     val key = NamespacedKey(plugin,title)
 
@@ -28,6 +29,6 @@ class CurrencyDisplayItem(val plugin: ChaoticClaims, val itemMaterial: Material,
     override fun getItemProvider(): ItemProvider {
         val dataRead = tracking.persistentDataContainer.get(key, PersistentDataType.INTEGER) ?: 0
 
-        return ItemBuilder(itemMaterial).setDisplayName(title).addLoreLines(dataRead.toString())
+        return ItemBuilder(itemMaterial).setDisplayName(title).addLoreLines(NumberFormat.getInstance().format(dataRead))
     }
 }

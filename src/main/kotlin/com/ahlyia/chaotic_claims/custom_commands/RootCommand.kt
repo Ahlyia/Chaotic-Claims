@@ -1,6 +1,7 @@
 package com.ahlyia.chaotic_claims.custom_commands
 
 import com.ahlyia.chaotic_claims.ChaoticClaims
+import com.ahlyia.chaotic_claims.gui_items.BountiesViewButton
 import com.ahlyia.chaotic_claims.gui_items.ClaimMenuButton
 import com.ahlyia.chaotic_claims.gui_items.CurrencyDisplayItem
 import com.mojang.brigadier.context.CommandContext
@@ -22,21 +23,23 @@ object RootCommand {
         val source = ctx.source
         val player = source.executor as? Player
 
+        val guiBuilder = Gui.normal()
+            .setStructure(
+                ".......P#",
+                ".........",
+                "..B.C.S..",
+                ".........",
+                "........."
+            )
+            .addIngredient('#', CurrencyDisplayItem(plugin,Material.GRASS_BLOCK,"Claims",player))
+            .addIngredient('P', CurrencyDisplayItem(plugin,Material.SKELETON_SKULL,"Points",player))
+            .addIngredient('C', ClaimMenuButton())
+            .addIngredient('B', BountiesViewButton())
+            .build()
+
         if(player != null) {
             println("${player.name} sent root command!")
 
-            val guiBuilder = Gui.normal()
-                .setStructure(
-                    ".......P#",
-                    ".........",
-                    "..B.C.S..",
-                    ".........",
-                    "........."
-                )
-                .addIngredient('#', CurrencyDisplayItem(plugin,Material.GRASS_BLOCK,"Claims",player))
-                .addIngredient('P', CurrencyDisplayItem(plugin,Material.SKELETON_SKULL,"Points",player))
-                .addIngredient('C', ClaimMenuButton())
-                .build()
 
             val window = Window.single()
                 .setViewer(player)

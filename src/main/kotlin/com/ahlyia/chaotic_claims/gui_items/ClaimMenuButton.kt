@@ -12,11 +12,12 @@ import xyz.xenondevs.invui.gui.PagedGui
 import xyz.xenondevs.invui.gui.structure.Structure
 import xyz.xenondevs.invui.item.ItemProvider
 import xyz.xenondevs.invui.item.builder.ItemBuilder
+import xyz.xenondevs.invui.item.impl.AbstractItem
 import xyz.xenondevs.invui.item.impl.controlitem.ControlItem
 import xyz.xenondevs.invui.window.Window
 import javax.swing.plaf.basic.BasicMenuItemUI
 
-class ClaimMenuButton() : ControlItem<Gui>() {
+class ClaimMenuButton() : AbstractItem() {
     val plugin = ChaoticClaims.instance
 
     override fun handleClick(clickType: ClickType, player: Player, event: InventoryClickEvent) {
@@ -35,13 +36,16 @@ class ClaimMenuButton() : ControlItem<Gui>() {
         )
 
         val structure: Structure = Structure(
+            ".........",
             "....I....",
+            ".........",
             "S.O.R..TC",
             "........."
         )
             .addIngredient('I', DisplayItem("Claim Info",infoDisplay))
             .addIngredient('C', CurrencyDisplayItem(plugin,Material.GRASS_BLOCK,"Claims",player))
             .addIngredient('R', RedeemBlocksMenuButton())
+            .addIngredient('T', TranslatedCurrencyDisplay(player))
 
 
         val GUI = Gui.normal().setStructure(structure).build()
@@ -54,7 +58,7 @@ class ClaimMenuButton() : ControlItem<Gui>() {
         window.open()
     }
 
-    override fun getItemProvider(p0: Gui?): ItemProvider {
+    override fun getItemProvider(): ItemProvider {
         val stack = ItemStack(Material.IRON_SHOVEL)
         val meta = stack.itemMeta
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
