@@ -1,6 +1,7 @@
 package com.ahlyia.chaotic_claims.custom_commands
 
 import com.ahlyia.chaotic_claims.ChaoticClaims
+import com.ahlyia.chaotic_claims.gui_items.ClaimMenuButton
 import com.ahlyia.chaotic_claims.gui_items.CurrencyDisplayItem
 import com.mojang.brigadier.context.CommandContext
 import io.papermc.paper.command.brigadier.CommandSourceStack
@@ -34,6 +35,7 @@ object RootCommand {
                 )
                 .addIngredient('#', CurrencyDisplayItem(plugin,Material.GRASS_BLOCK,"Claims",player))
                 .addIngredient('P', CurrencyDisplayItem(plugin,Material.SKELETON_SKULL,"Points",player))
+                .addIngredient('C', ClaimMenuButton())
                 .build()
 
             val window = Window.single()
