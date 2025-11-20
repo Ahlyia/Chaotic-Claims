@@ -16,33 +16,42 @@ import xyz.xenondevs.invui.item.impl.controlitem.ControlItem
 import xyz.xenondevs.invui.window.Window
 import javax.swing.plaf.basic.BasicMenuItemUI
 
-class ClaimMenuButton : ControlItem<Gui>() {
+class ClaimMenuButton() : ControlItem<Gui>() {
     val plugin = ChaoticClaims.instance
 
     override fun handleClick(clickType: ClickType, player: Player, event: InventoryClickEvent) {
-        val claimInfoDisplay = """|Start by clicking the \"Start Claim\" button.
-            |This will make the first corner 
-            |where you are currently standing
-            |
-            |After that, `type /chaotic confirm`
-            |to place the other corner where you
-            |are standing. This will complete
-            |the claim.
-            |
-            |You can review your Claim Settings
-            |on this page as well.
-        """.trimMargin()
+        val costPerBlock = plugin.settings.landCostPerBlock
+        val infoDisplay = listOf(
+            "Start by clicking the 'Start Claim' button.",
+            "This will make the first corner",
+            "where you are currently standing",
+            " ",
+            "After that, type `/chaotic confirm`",
+            "to place the other corner where you",
+            "are standing. This will complete the",
+            "claim.",
+            "",
+            "${costPerBlock} Claims per Block."
+        )
 
         val structure: Structure = Structure(
             "....I....",
             "S.O.R..TC",
             "........."
         )
-            .addIngredient('I', DisplayItem("Claim Info",claimInfoDisplay))
+            .addIngredient('I', DisplayItem("Claim Info",infoDisplay))
             .addIngredient('C', CurrencyDisplayItem(plugin,Material.GRASS_BLOCK,"Claims",player))
             .addIngredient('R', RedeemBlocksMenuButton())
 
-        gui.applyStructure(structure)
+
+        val GUI = Gui.normal().setStructure(structure).build()
+        val window: Window = Window.single()
+            .setViewer(player)
+            .setTitle("Chaotic Claims: Claim")
+            .setGui(GUI)
+            .build()
+
+        window.open()
     }
 
     override fun getItemProvider(p0: Gui?): ItemProvider {

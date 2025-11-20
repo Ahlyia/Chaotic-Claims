@@ -13,14 +13,19 @@ import xyz.xenondevs.invui.item.builder.ItemBuilder
 import xyz.xenondevs.invui.item.impl.AbstractItem
 import xyz.xenondevs.invui.item.impl.SimpleItem
 
-class DisplayItem(val title: String, val display: String) : AbstractItem() {
+class DisplayItem(val title: String, val loreLines: List<String>) : AbstractItem() {
     override fun getItemProvider(): ItemProvider {
         val stack = ItemStack(Material.WRITABLE_BOOK,1)
         val meta = stack.itemMeta
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
         stack.itemMeta = meta
 
-        return ItemBuilder(stack).setDisplayName(title).clearLore().addLoreLines(display)
+        val build = ItemBuilder(stack).setDisplayName(title)
+        build.clearLore()
+
+        loreLines.forEach { build.addLoreLines(it) }
+
+        return build
     }
 
     override fun handleClick(clickType: ClickType, player: Player, event: InventoryClickEvent) {
