@@ -137,7 +137,15 @@ class ChaoticClaims : JavaPlugin() {
     private val settingsFile by lazy { File(dataFolder,"settings.json") }
 
     val pluginCommands = PluginCommands(this)
-    val pluginGUIs = PluginGUIs(this)
+
+    companion object {
+        lateinit var instance: ChaoticClaims
+            private set
+    }
+
+    init {
+        ChaoticClaims.instance = this
+    }
 
     override fun onEnable() {
         if(!dataFolder.exists()) dataFolder.mkdir()
@@ -146,7 +154,6 @@ class ChaoticClaims : JavaPlugin() {
         println("Discord Webhook ist: ${settings.discordWebhook}")
 
         server.pluginManager.registerEvents(PluginListener(settings), this)
-        server.pluginManager.registerEvents(GUIListener(settings, this), this)
 
         this.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {commands ->
             val hooktest = Commands.literal("hooktest")

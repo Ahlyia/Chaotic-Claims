@@ -2,6 +2,8 @@ package com.ahlyia.chaotic_claims.custom_commands
 
 import com.ahlyia.chaotic_claims.ChaoticClaims
 import com.ahlyia.chaotic_claims.gui_items.CurrencyDisplayItem
+import com.ahlyia.chaotic_claims.gui_items.PanesTracker
+import com.ahlyia.chaotic_claims.gui_items.RevolvingPane
 import com.mojang.brigadier.context.CommandContext
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import net.kyori.adventure.text.Component
@@ -15,6 +17,8 @@ import xyz.xenondevs.invui.gui.Gui
 import xyz.xenondevs.invui.window.Window
 
 object RootCommand {
+
+
     fun execute(ctx: CommandContext<CommandSourceStack>, plugin: ChaoticClaims): Int {
         val source = ctx.source
         val player = source.executor as? Player
@@ -22,6 +26,7 @@ object RootCommand {
         if(player != null) {
             println("${player.name} sent root command!")
 
+            val panesTracker = PanesTracker()
 
             val guiBuilder = Gui.normal()
                 .setStructure(
@@ -35,6 +40,7 @@ object RootCommand {
                 )
                 .addIngredient('#', CurrencyDisplayItem(plugin,Material.GRASS_BLOCK,"Claims",player))
                 .addIngredient('S', CurrencyDisplayItem(plugin,Material.SKELETON_SKULL,"Points",player))
+                .addIngredient('-', RevolvingPane(panesTracker))
                 .build()
 
             val window = Window.single()
@@ -44,6 +50,9 @@ object RootCommand {
                 .build()
 
             window.open()
+            panesTracker.start()
+
+            window.addCloseHandler { panesTracker.stop() }
         } else {
             println("Server, or CommandBlock sent root command!")
         }

@@ -7,8 +7,6 @@ import org.bukkit.entity.Player
 
 class PluginCommands(private val plugin: ChaoticClaims){
 
-    val pluginGUIs = plugin.pluginGUIs
-
     fun rootCommand(ctx: CommandContext<CommandSourceStack>) = RootCommand.execute(ctx,plugin) // an example of my beautiful compartmentalization
 
     fun hooktestCommand(ctx: CommandContext<CommandSourceStack>): Int {

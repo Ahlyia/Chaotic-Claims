@@ -18,7 +18,11 @@ class CurrencyDisplayItem(val plugin: ChaoticClaims, val itemMaterial: Material,
     val key = NamespacedKey(plugin,title)
 
     override fun handleClick(clickType: ClickType, player: Player, clickEvent: InventoryClickEvent) {
-        // do nothing.
+        var dataRead = player.persistentDataContainer.get(key,PersistentDataType.INTEGER) ?: 0
+        dataRead += 1
+
+        player.persistentDataContainer.set(key, PersistentDataType.INTEGER,dataRead)
+        notifyWindows()
     }
 
     override fun getItemProvider(): ItemProvider {
