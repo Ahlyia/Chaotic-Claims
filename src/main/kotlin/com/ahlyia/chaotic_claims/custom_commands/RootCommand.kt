@@ -23,22 +23,22 @@ object RootCommand {
         val source = ctx.source
         val player = source.executor as? Player
 
-        val guiBuilder = Gui.normal()
-            .setStructure(
-                ".......P#",
-                ".........",
-                "..B.C.S..",
-                ".........",
-                "........."
-            )
-            .addIngredient('#', CurrencyDisplayItem(plugin,Material.GRASS_BLOCK,"Claims",player))
-            .addIngredient('P', CurrencyDisplayItem(plugin,Material.SKELETON_SKULL,"Points",player))
-            .addIngredient('C', ClaimMenuButton())
-            .addIngredient('B', BountiesViewButton())
-            .build()
-
         if(player != null) {
             println("${player.name} sent root command!")
+
+            val guiBuilder = Gui.normal()
+                .setStructure(
+                    ".......P#",
+                    ".........",
+                    "..B.C.S..",
+                    ".........",
+                    "........."
+                )
+                .addIngredient('#', CurrencyDisplayItem(plugin,Material.GRASS_BLOCK,"Claims",player))
+                .addIngredient('P', CurrencyDisplayItem(plugin,Material.SKELETON_SKULL,"Points",player))
+                .addIngredient('C', ClaimMenuButton())
+                .addIngredient('B', BountiesViewButton())
+                .build()
 
 
             val window = Window.single()
