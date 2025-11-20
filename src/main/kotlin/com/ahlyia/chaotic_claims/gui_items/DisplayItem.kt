@@ -15,7 +15,7 @@ import xyz.xenondevs.invui.item.impl.SimpleItem
 
 class DisplayItem(val title: String, val loreLines: List<String>) : AbstractItem() {
     override fun getItemProvider(): ItemProvider {
-        val stack = ItemStack(Material.WRITABLE_BOOK,1)
+        val stack = ItemStack(Material.PAPER,1)
         val meta = stack.itemMeta
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
         stack.itemMeta = meta

@@ -29,16 +29,18 @@ import io.papermc.paper.registry.data.dialog.DialogBase
 import io.papermc.paper.registry.data.dialog.body.DialogBody
 import io.papermc.paper.registry.data.dialog.type.DialogType
 import net.kyori.adventure.text.Component
+import org.bukkit.NamespacedKey
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.persistence.PersistentDataType
 
 @Serializable
 data class PluginSettings(
     val disableEditWarning: Boolean = false,
     val discordWebhook: String = "",
     val landCostPerBlock: Int = 12,
-    val freeClaim: Int = 768, // four chunks
+    val freeClaim: Int = 12288, // four chunks
     val bannedItems: List<String> = emptyList(),
     val itemCosts: Map<String, Int> = mapOf( // Item cost to redeem from Bounty Points
         "minecraft:diamond" to 15,
@@ -127,6 +129,12 @@ public class PluginListener(var settings: PluginSettings) : Listener {
             }
 
             player.showDialog(warning)
+
+            val playerClaims = player.persistentDataContainer.get(NamespacedKey(ChaoticClaims.instance, "Claims"), PersistentDataType.INTEGER)
+
+            if (playerClaims == null) {
+                player.persistentDataContainer.set(NamespacedKey(ChaoticClaims.instance,"Claims"),PersistentDataType.INTEGER,settings.freeClaim)
+            }
         }
     }
 }
@@ -156,12 +164,24 @@ class ChaoticClaims : JavaPlugin() {
         server.pluginManager.registerEvents(PluginListener(settings), this)
 
         this.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {commands ->
+            val claimSet = Commands.literal("set")
+
+            val claims = Commands.literal("claims")
+                .then(claimSet)
+                .executes{ctx ->
+                    val source = ctx.source
+                    val player = source.executor as? Player
+
+                    player?.sendMessage("")
+                    1
+                }
             val hooktest = Commands.literal("hooktest")
                 .executes{ctx -> pluginCommands.hooktestCommand(ctx)}
 
             val commandRoot = Commands.literal("chaotic")
 
             commandRoot
+                .then(claims)
                 .then(hooktest)
                 .executes{ctx -> pluginCommands.rootCommand(ctx)}
 
